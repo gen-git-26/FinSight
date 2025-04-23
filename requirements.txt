@@ -1,0 +1,4 @@
+transformers
+nltk
+torch
+huggingface_hub
