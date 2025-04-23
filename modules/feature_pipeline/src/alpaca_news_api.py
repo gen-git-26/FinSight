@@ -20,13 +20,13 @@ class News:
     headline: str
     summary: str
     content: str
-    data: datetime
+    date: datetime
 
 def fetch_batch_of_news(
-        from_date: datetime,
-        to_date: datetime,
-        page_token: Optional[str] = None,
-) -> Tuple[list[News], str]:
+    from_date: datetime,
+    to_date: datetime,
+    page_token: Optional[str] = None,
+) -> Tuple[List[News], str]:
     """
     Fetches a batch of news articles from Alpaca API.
     Args:
@@ -38,47 +38,47 @@ def fetch_batch_of_news(
     """
     # prepare the request URL
     headers = {
-        "APCA_API_KEY_ID": ALPACA_API_KEY,
-        "APCA_API_SECRET_KEY": ALPACA_SECRET_KEY,
+        "Apca-Api-Key-Id": ALPACA_API_KEY,
+        "Apca-Api-Secret-Key": ALPACA_SECRET_KEY,
     }
     params = {
         "start": from_date.strftime("%Y-%m-%dT%H:%M:%SZ"),
         "end": to_date.strftime("%Y-%m-%dT%H:%M:%SZ"),
         "limit": 50,
-        "including_content": True,
-        "sort": "ASC"
+        "include_content": True,
+        "sort": "ASC",
     }
-
     if page_token is not None:
         params["page_token"] = page_token
 
     url = "https://data.alpaca.markets/v1beta1/news"
 
-    # ping Alpaca API
-    try:
-        response = requests.get(url, headers=headers, params=params)
-        response.raise_for_status()
-    except requests.exceptions.RequestException as e:
-        raise RuntimeError(f"Failed to fetch news: {e}")
-    
+    # ping API
+    response = requests.get(url, headers=headers, params=params)
+
     # parse output
     list_of_news = []
     next_page_token = None
-    if response.status_code == 200: # check if the request was successful
+    if response.status_code == 200:  # Check if the request was successful
         # parse response into json
         news_json = response.json()
-        # extract next page token
+
+        # extract next page token (if any)
         next_page_token = news_json.get("next_page_token", None)
 
-        for item in news_json["news"]:
-            # create a News object for each item in the response
-            news = News(
-                headline=item["headline"],
-                summary=item["summary"],
-                content=item["content"],
-                data=datetime.fromisoformat(item["timestamp"]),
+        for n in news_json["news"]:
+            list_of_news.append(
+                News(
+                    headline=n["headline"],
+                    date=n["updated_at"],
+                    summary=n["summary"],
+                    content=n["content"],
+                )
             )
-            list_of_news.append(news)
+
+    else:
+        raise RuntimeError(f"Failed to fetch news: {response.status_code} - {response.text}")
+
     return list_of_news, next_page_token
 
 def save_news_to_json(news_list: List[News], file_path: str) -> None:
