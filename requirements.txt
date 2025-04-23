@@ -8,3 +8,5 @@ numpy
 scikit-learn
 alpaca-py 
 alpaca-trade-api
+keras
+tensorflow
