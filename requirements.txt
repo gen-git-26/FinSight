@@ -2,3 +2,9 @@ transformers
 nltk
 torch
 huggingface_hub
+yfinance
+pandas
+numpy
+scikit-learn
+alpaca-py 
+alpaca-trade-api
