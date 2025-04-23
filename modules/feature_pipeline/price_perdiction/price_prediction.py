@@ -2,8 +2,8 @@ import yfinance as yf
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
-from keras.models import Sequential
-from keras.layers import Dense, LSTM
+from keras.models import Sequential # type: ignore
+from keras.layers import Dense, LSTM # type: ignore
 
 def predict_price(symbol, days=60):
     data = yf.download(symbol, period='90d', interval='1d')
