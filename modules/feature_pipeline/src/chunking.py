@@ -113,27 +113,6 @@ class TextChunker:
         
         final_chunks.append(chunks[-1])
         return final_chunks
-
-
-def main():
-    """Example usage of the TextChunker class."""
-    # Initialize the chunker
-    chunker = TextChunker()
     
-    # Process a text file
-    file_path = "path/to/your/document.txt"
-    chunks = chunker.process_file(
-        file_path,
-        context_window=1,
-        percentile_threshold=95,
-        min_chunk_size=3
-    )
+
     
-    # Print results
-    print(f"Successfully split text into {len(chunks)} chunks")
-    print("\nFirst chunk preview:")
-    print(f"{chunks[0][:200]}...")
-
-
-if __name__ == "__main__":
-    main()
